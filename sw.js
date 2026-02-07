@@ -1,4 +1,4 @@
-const CACHE_NAME = 'foodtruck-pos-v1';
+const CACHE_NAME = 'foodtruck-pos-v2';
 const URLS_TO_CACHE = [
   './index.html',
   './manifest.json',
