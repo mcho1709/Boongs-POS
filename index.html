@@ -311,6 +311,11 @@
 
           const quickSale = () => {
             if (Object.keys(currentOrder).length === 0) { alert('Please add items to the order'); return; }
+            // 확인 모달 표시
+            setConfirmModal({ show: true, type: 'quicksale', docketNumber: null });
+          };
+
+          const confirmQuickSale = () => {
             const now = new Date();
             const timeString = now.toLocaleTimeString('en-US', { hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
             const newDocket = {
@@ -323,6 +328,7 @@
             setCompletedDockets(prev => [...prev, newDocket]);
             setCurrentDocketNumber(getNextDocketNumber(currentDocketNumber));
             setCurrentOrder({});
+            setConfirmModal({ show: false, type: '', docketNumber: null });
           };
 
           const completeDocket = (docketNumber) => {
@@ -507,14 +513,22 @@
                   <div className="modal-overlay">
                     <div className="modal">
                       <h3 className="modal-title">
-                        {confirmModal.type==='cancel' ? `Cancel Docket #${confirmModal.docketNumber}?` : 'Reset All Data?'}
+                        {confirmModal.type==='cancel' ? `Cancel Docket #${confirmModal.docketNumber}?` : 
+                         confirmModal.type==='quicksale' ? 'Quick Sale Confirmation' :
+                         'Reset All Data?'}
                       </h3>
                       <p className="modal-text">
-                        {confirmModal.type==='cancel' ? 'This docket will be permanently deleted.' : 'All sales data will be permanently deleted.'}
+                        {confirmModal.type==='cancel' ? 'This docket will be permanently deleted.' :
+                         confirmModal.type==='quicksale' ? 'This order will be immediately completed without a waiting docket. Continue?' :
+                         'All sales data will be permanently deleted.'}
                       </p>
                       <div className="modal-buttons">
                         <button onClick={()=>setConfirmModal({show:false,type:'',docketNumber:null})} className="modal-btn btn-gray">Cancel</button>
-                        <button onClick={confirmModal.type==='cancel'?confirmCancel:confirmReset} className="modal-btn btn-danger">Confirm</button>
+                        <button onClick={
+                          confirmModal.type==='cancel' ? confirmCancel :
+                          confirmModal.type==='quicksale' ? confirmQuickSale :
+                          confirmReset
+                        } className="modal-btn btn-danger">Confirm</button>
                       </div>
                     </div>
                   </div>
