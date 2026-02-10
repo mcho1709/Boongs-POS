@@ -319,14 +319,14 @@
             const now = new Date();
             const timeString = now.toLocaleTimeString('en-US', { hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
             const newDocket = {
-              number: formatDocketNumber(currentDocketNumber),
+              number: 'QS-' + timeString.replace(/:/g, ''), // QS-143022 형식 (Quick Sale - 시간)
               items: { ...currentOrder },
               total: Object.entries(currentOrder).reduce((s,[item,qty]) => s + menuPrices[item]*qty, 0),
               time: timeString
             };
-            // 바로 completedDockets에 추가 (liveDockets 거치지 않음)
+            // 바로 completedDockets에 추가 (liveDockets 거치지 않음, docket number 소비 안 함)
             setCompletedDockets(prev => [...prev, newDocket]);
-            setCurrentDocketNumber(getNextDocketNumber(currentDocketNumber));
+            // currentDocketNumber는 증가시키지 않음
             setCurrentOrder({});
             setConfirmModal({ show: false, type: '', docketNumber: null });
           };
